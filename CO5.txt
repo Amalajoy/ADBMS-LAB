@@ -1,0 +1,50 @@
+> use Employee
+   switched to db Employee
+
+   > db
+   EMP
+   > db.createCollection("empDetails")
+   { "ok" : 1 }
+
+   > show collections
+   empDetails
+
+   > db.empDetails.insert({Name:"Mohan",Age:30,Email:"mohan1@gmail.com",Salary:7000})
+   WriteResult({ "nInserted" : 1 })
+   > db.empDetails.insert({Name:"Alan",Age:25,Email:"alan99@gmail.com",Salary:15000})
+   WriteResult({ "nInserted" : 1 })
+   > db.empDetails.insert({Name:"Arun",Age:35,Email:"arun@gmail.com",Salary:5000})
+   WriteResult({ "nInserted" : 1 })
+   > db.empDetails.insert({Name:"Abhi",Age:32,Email:"abhin@gmail.com",salary:8000})
+   WriteResult({ "nInserted" : 1 })
+   > db.empDetails.insert({Name:"Rahul",Age:37,Email:"rahulmo@gmail.com",salary:11000})
+   WriteResult({ "nInserted" : 1 })
+
+   > db.empDetails.count()
+   5
+
+
+1.Find average salary of each department
+
+    >db.empDetails.aggregate([{$group:{_id:"$Dept","avg sal":{$avg;'$Salary"}}}])
+
+2.find minimum salary of each department
+
+    >db.empDetails.aggregate([{$group:{_id:"$Dept","minimun sal":{$min;'$Salary"}}}])
+
+3.Find average salary of each department
+
+    >db.empDetails.aggregate([{$group:{_id:"$Dept","avg sal":{$avg;'$Salary"}}}])
+
+4.find no. of employees of each department
+
+    >db.empDetails.aggregate([{$group:{_id:"$Dept","no of employees":{$sum:1}}}])
+
+5.sort collection in descending order
+
+    >db.empDetails.find().sort({"Name":-1})
+
+6.create a text index for 'name' and search for names mohan and bhuvan
+
+    >db.empDetails.createIndex({Name:"text"})
+    >db.empDetails.find({$text:{$text:{$search:"Mohan Bhuvan"}})
