@@ -1,0 +1,141 @@
+1.Create a database named Employee. Create a collection named empDetails
+You can use any of the fields Name, Age ,e_mail, phone,salary
+
+
+1) Insert 5 documents in it using the different insert() methods and
+
+   > use Employee
+   switched to db Employee
+
+   > db
+   EMP
+   > db.createCollection("empDetails")
+   { "ok" : 1 }
+
+   > show collections
+   empDetails
+
+   > db.empDetails.insert({Name:"Mohan",Age:30,Email:"mohan1@gmail.com",Salary:7000})
+   WriteResult({ "nInserted" : 1 })
+   > db.empDetails.insert({Name:"Alan",Age:25,Email:"alan99@gmail.com",Salary:15000})
+   WriteResult({ "nInserted" : 1 })
+   > db.empDetails.insert({Name:"Arun",Age:35,Email:"arun@gmail.com",Salary:5000})
+   WriteResult({ "nInserted" : 1 })
+   > db.empDetails.insert({Name:"Abhi",Age:32,Email:"abhin@gmail.com",salary:8000})
+   WriteResult({ "nInserted" : 1 })
+   > db.empDetails.insert({Name:"Rahul",Age:37,Email:"rahulmo@gmail.com",salary:11000})
+   WriteResult({ "nInserted" : 1 })
+
+   > db.empDetails.count()
+   5
+
+a) Find the details of employee whose name is mohan
+
+   > db.empDetails.findOne({Name:"Mohan"})
+   {
+        "_id" : ObjectId("613776dc85f46eb822efe17c"),
+        "Name" : "Mohan",
+        "Age" : 30,
+        "Email" : "mohan1@gmail.com",
+        "Salary" : 7000
+   }
+
+b) Fetch the documents of employees whose salary >=5000
+
+   > db.empDetails.find({$and:[{salary:{$gte:5000}}]})
+   { "_id" : ObjectId("613776dc85f46eb822efe17c"), "Name" : "Mohan", "Age" : 30, "Email" : "mohan1@gmail.com", "salary" : 7000 }
+   { "_id" : ObjectId("6137771885f46eb822efe17d"), "Name" : "Alan", "Age" : 25, "Email" : "alan99@gmail.com", "salary" : 15000 }
+   { "_id" : ObjectId("6137773985f46eb822efe17e"), "Name" : "Arun", "Age" : 35, "Email" : "arun@gmail.com", "salary" : 5000 }
+   { "_id" : ObjectId("6137775d85f46eb822efe17f"), "Name" : "Abhi", "Age" : 32, "Email" : "abhin@gmail.com", "salary" : 8000 }
+   { "_id" : ObjectId("6137778c85f46eb822efe180"), "Name" : "Rahul", "Age" : 37, "Email" : "rahulmo@gmail.com", "salary" : 11000 }
+
+
+c) Find the documents of employees whose name starts with letter r
+
+   > db.empDetails.find({$or:[{"Name":/^R/}]});
+
+   { "_id" : ObjectId("6137778c85f46eb822efe180"), "Name" : "Rahul", "Age" : 37, "Email" : "rahulmo@gmail.com", "salary" : 11000 }
+
+
+d) Find the documents of employees whose name is not in mohan,rahul,arun
+
+   > db.empDetails.find({"Name":{$not:{$in:["Mohan","Rahul","Arun"]}}}).pretty()
+   {
+        "_id" : ObjectId("6137771885f46eb822efe17d"),
+        "Name" : "Alan",
+        "Age" : 25,
+        "Email" : "alan99@gmail.com",
+        "salary" : 15000
+   }
+   {
+        "_id" : ObjectId("6137775d85f46eb822efe17f"),
+        "Name" : "Abhi",
+        "Age" : 32,
+        "Email" : "abhin@gmail.com",
+        "salary" : 8000
+   }
+
+
+e) Find the documents of employees whose names are mohan , rahul, arun
+
+   > db.empDetails.find({"Name":{$in:["Mohan","Rahul","Arun"]}}).pretty()
+   {
+        "_id" : ObjectId("613776dc85f46eb822efe17c"),
+        "Name" : "Mohan",
+        "Age" : 30,
+        "Email" : "mohan1@gmail.com",
+        "salary" : 7000
+   }
+   {
+        "_id" : ObjectId("6137773985f46eb822efe17e"),
+        "Name" : "Arun",
+        "Age" : 35,
+        "Email" : "arun@gmail.com",
+        "salary" : 5000
+   }
+   {
+        "_id" : ObjectId("6137778c85f46eb822efe180"),
+        "Name" : "Rahul",
+        "Age" : 37,
+        "Email" : "rahulmo@gmail.com",
+        "salary" : 11000
+   }
+
+
+f) Retrieve the details of employees whose age is less than 30. Display only the fields name, salary
+
+   > db.empDetails.find({Age:{$lt:30}},{Name:1,salary:1})
+
+   { "_id" : ObjectId("6137771885f46eb822efe17d"), "Name" : "Alan", "Salary" : 15000 }
+
+
+g) Find the details of employees whose salary is >5000 and age is <30
+
+   > db.empDetails.find({$and:[{salary:{$gt:5000}},{Age:{$lt:30}}]})
+
+   { "_id" : ObjectId("6137771885f46eb822efe17d"), "Name" : "Alan", "Age" : 25, "Email" : "alan99@gmail.com", "Salary" : 15000 }
+
+
+h) Update the e-mail of employee whose name is mohan 
+
+   > db.empDetails.updateOne({Name:'Mohan'},{$set:{Email:'mohankumar4@gmail.com'}})
+ 
+   { "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+
+   > db.empDetails.findOneAndUpdate({Name:'Mohan'},{$set:{Email:'mohankumar4@gmail.com'}})
+
+   {
+        "_id" : ObjectId("613776dc85f46eb822efe17c"),
+        "Name" : "Mohan",
+        "Age" : 30,
+        "Email" : "mohankumar4@gmail.com",
+        "salary" : 7000
+   }
+
+i) Delete all the documents of employees whose age>56
+
+   > db.empDetails.find({Age:{$gt:56}})
+
+   > db.empDetails.deleteMany({Age:{$gt:56}})
+
+   { "acknowledged" : true, "deletedCount" : 0 }

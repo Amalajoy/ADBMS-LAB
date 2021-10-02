@@ -1,0 +1,41 @@
+create table student_amalaah(rollno integer primary key,name varchar(20), dob date,dept
+varchar(5), mark float);
+A)
+insert into student_amalaah values(1,'Amitha','18-June-1988','CS',480);
+insert into student_amalaah values(2,'Arya','12-July-1989','IT',500);
+insert into student_amalaah values(3,'George','19-January-1989','CS',489);
+insert into student_amalaah values(4,'Gourikripa','28-November-1989','CS',495);
+insert into student_amalaah values(5,'Henin','12-December-1988','IT',525);
+insert into student_amalaah values(6,'Ishana','25-December-1988','CS',500);
+insert into student_amalaah values(&rollno,'&name','&dob','&dept',&mark);
+SELECT * FROM student_amalaah;
+
+B)
+alter table student_amalaah add(address varchar(10));
+alter table student_amalaah modify(name varchar(30));
+alter table student_amalaah modify(address varchar(50));
+
+C)
+SELECT * FROM student_amalaah;
+
+D)
+update student_amalaah set address='No:5,Gandhinagar' where rollno=1;
+update student_amalaah set address='Flat no:5A,Skyline,Aluva' where rollno=2;
+update student_amalaah set address='Apple Heights,Padivattom' where rollno=3;
+update student_amalaah set address='Green Valley,Cochin' where rollno=7;
+SELECT * FROM student_amalaah;
+
+E)
+SELECT name,dob FROM student_amalaah WHERE months_between(sysdate,dob)/12<22;
+
+F)
+SELECT * FROM student_amalaah ORDER BY mark;
+
+G)
+SELECT name,dob FROM student_amalaah WHERE dept='CS' and mark>500;
+
+H)
+SELECT name FROM student_amalaah WHERE mark>(select avg(mark) from student_amalaah); 
+
+I)
+drop table student_amlaah;

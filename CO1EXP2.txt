@@ -1,0 +1,209 @@
+SQL> create table emply(emp_id char(8) check(emp_id like 'E%') primary key,emp_name varchar(18),street_no int,city varchar(18));
+
+Table created.
+
+SQL> insert into emply values('E-101','Adarsh',101,'MG Road');
+
+1 row created.
+
+SQL> insert into emply values('E-102','Bonny',101,'MG Road');
+
+1 row created.
+
+SQL> insert into emply values('E-103','Catherin',102,'Cochin');
+
+1 row created.
+
+SQL> insert into emply values('E-104','Glenn',104,'Ernakulam');
+
+1 row created.
+
+SQL> insert into emply values('E-105','Alan',103,'Vytila');
+
+1 row created.
+
+SQL> insert into emply values('E-110','Arthur',102,'Vytila');
+
+1 row created.
+
+SQL> insert into emply values('E-111','Cerci',102,'Vytila');
+
+1 row created.
+
+SQL> select * from emply;
+
+EMP_ID   EMP_NAME            STREET_NO CITY
+-------- ------------------ ---------- ------------------
+E-101    Adarsh                    101 MG Road
+E-102    Bonny                     101 MG Road
+E-103    Catherin                  102 Cochin
+E-104    Glenn                     104 Ernakulam
+E-105    Alan                      103 Vytila
+E-110    Arthur                    102 Vytila
+E-111    Cerci                     102 Vytila
+7 rows selected.
+
+SQL> create table companys(company_name varchar(18) primary key,city varchar(18));
+
+Table created.
+
+SQL> insert into companys values('SBI','MG Road');
+
+1 row created.
+
+SQL> insert into companys values('SBT','MG Road');
+
+1 row created.
+
+SQL> insert into companys values('Federal','Broadway');
+
+1 row created.
+
+SQL> insert into companys values('Indian Bank','Cochin');
+
+1 row created.
+
+SQL> insert into companys values('SIB','Ernakulam');
+
+1 row created.
+
+SQL> select * from company;
+
+COMPANY_NAME       CITY
+------------------ ------------------
+SBI                MG Road
+SBT                MG Road
+Federal            Broadway
+Indian Bank        Cochin
+SIB                Ernakulam
+
+SQL> create table work(emp_id char(8) references emp(emp_id),company_name varchar(18) references company(company_name),salary float,primary key(emp_id,company_name));
+
+Table created.
+
+SQL> insert into work values('E-101','SBI',71000);
+
+1 row created.
+
+SQL> insert into work values('E-102','SBI',90000);
+
+1 row created.
+
+SQL> insert into work values('E-103','SBT',40000);
+
+1 row created.
+
+SQL> insert into work values('E-104','Federal',37000);
+
+1 row created.
+
+SQL> insert into work values('E-105','SBT',17000);
+
+1 row created.
+
+
+SQL> select * from work;
+
+EMP_ID   COMPANY_NAME           SALARY
+-------- ------------------ ----------
+E-101    SBI                     71000
+E-102    SBI                     90000
+E-103    SBT                     40000
+E-104    Federal                 37000
+E-105    SBT                     17000
+
+SQL> create table manages(emp_id char(8) references emp(emp_id),manager_id char(8) references emp(emp_id),unique(emp_id,manager_id));
+
+Table created.
+
+SQL> insert into manages values('E-101','E-102');
+
+1 row created.
+
+SQL> insert into manages values('E-102',NULL);
+
+1 row created.
+
+SQL> insert into manages values('E-103','E-110');
+
+1 row created.
+
+SQL> insert into manages values('E-104','E-111');
+
+1 row created.
+
+SQL> insert into manages values('E-105','E-110');
+
+1 row created.
+
+SQL> select * from manages;
+
+EMP_ID   MANAGER_
+-------- --------
+E-101    E-102
+E-102
+E-103    E-110
+E-104    E-111
+E-105    E-110
+
+A)  SQL> select emp_name from work,emply where company_name='SBI' and emply.emp_id=works.emp_id;
+
+      EMP_NAME
+    ------------------
+      Adarsh
+      Bonny
+
+B)  SQL> select emply.emp_name from emply,work,companys where emply.emp_id=work.emp_id and work.company_name=companys.company_name and emply.city=companys.city;
+
+      EMP_NAME
+    ------------------
+      Adarsh
+      Bonny
+
+C)   SQL> select emp_id from work w1,(select avg(salary) as avgsal,company_name from work group by company_name) w2 where w1.company_name=w2.company_name and w1.salary>w2.avgsal;
+
+      EMP_ID
+     --------
+      E-102
+      E-103
+
+D)   SQL> update work set salary=salary*1.1 where emp_id in (select manager_id from manages) and company_name='SBI';
+
+      1 row updated.
+
+    SQL> select * from works;
+
+    EMP_ID   COMPANY_NAME           SALARY
+   -------- ------------------ ----------
+     E-101    SBI                     71000
+     E-102    SBI                     99900
+     E-103    SBT                     40000
+     E-104    Federal                 37000
+
+E)  SQL> select company_name from work group by company_name having count(emp_id)>=all(select count(emp_id)from work group by company_name);
+
+      COMPANY_NAME
+    ------------------
+         SBI
+	 SBT
+
+SQL> select * from work;
+
+EMP_ID   COMPANY_NAME           SALARY
+-------- ------------------ ----------
+E-101    SBI                     71000
+E-102    SBI                     99000
+E-103    SBT                     40000
+E-104    Federal                 37000
+
+F)   SQL> select company_name from work group by company_name having avg (salary)>(select avg(salary) from work group by company_name having company_name='SBT');
+
+        COMPANY_NAME
+      ------------------
+            SBI
+
+SQL> commit;
+
+Commit complete.
+
+SQL> commit;
