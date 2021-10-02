@@ -1,0 +1,213 @@
+1. Write a PL/SQL program to find the sum of 2 numbers using functions
+
+SQL> create or replace function add_fun(a number,b number) return number as
+  2  c number;
+  3  begin
+  4  c:=a+b;
+  5  return c;
+  6  end;
+  7  /
+
+Function created.
+
+SQL> declare
+  2  result number;
+  3  begin
+  4  result:=add_fun(20,30);
+  5  dbms_output.put_line('Result is: '||result);
+  6  end;
+  7  /
+Result is: 50
+
+PL/SQL procedure successfully completed.
+
+
+
+2.Write a PL/SQL program to Check whether a number is Armstrong or not using functions
+
+SQL> create or replace function armstrong(n number) return number is
+  2  r number(10);
+  3  a number(10);
+  4  b number(10);
+  5  c number(10);
+  6  begin
+  7  b:=0;
+  8  c:=n;
+  9  while(c>0)
+ 10  loop
+ 11  r:=c mod 10;
+ 12  b:=b+(r*r*r);
+ 13  c:=floor(c/10);
+ 14  end loop;
+ 15  return b;
+ 16  end armstrong;
+ 17  /
+
+Function created.
+
+SQL> declare
+  2  n number(10);
+  3  m number(10);
+  4  begin
+  5  n:=&n;
+  6  m:=armstrong(n);
+  7  if(m=n) then
+  8  dbms_output.put_line('Given no is armstrong number');
+  9  else
+ 10  dbms_output.put_line('Given no is not an armstrong number');
+ 11  end if;
+ 12  end;
+ 13  /
+Enter value for n: 153
+old   5: n:=&n;
+new   5: n:=153;
+Given no is armstrong number
+
+PL/SQL procedure successfully completed.
+
+
+4.Write a PL/SQL function called POW that takes two numbers as argument
+ and return the value of the first number raised to the power of the second .
+
+SQL> create or replace function pow (n1 number,n2 number) return number as
+  2  res number;
+  3  begin
+  4  select power (n1,n2) into res from dual;
+  5  return res;
+  6  end;
+  7  /
+
+Function created.
+
+SQL> select power (2,4) from dual;
+
+POWER(2,4)
+----------
+        16
+		
+		
+SQL> declare
+  2  a number;
+  3  b number;
+  4  begin
+  5  a:=&a;
+  6  b:=&b;
+  7  dbms_output.put_line('power(n1,n2)='||pow(a,b));
+  8  end;
+  9  /
+Enter value for a: 2
+old   5: a:=&a;
+new   5: a:=2;
+Enter value for b: 4
+old   6: b:=&b;
+new   6: b:=4;
+power(n1,n2)=16
+
+PL/SQL procedure successfully completed.
+
+
+
+3.Create table that contains itemid,item_name & price of several items sold in a grocery shop, 
+  Using functions retrieve the item name & price from table when itemid is given as input.
+
+
+SQL> create table item(item_id integer primary key,itemname varchar(20),price float);
+
+Table created.
+
+SQL> insert into item values(&item_id,'&itemname',&price);
+Enter value for item_id: 2334
+Enter value for itemname: Geera
+Enter value for price: 206.25
+old   1: insert into item values(&item_id,'&itemname',&price)
+new   1: insert into item values(2334,'Geera',206.25)
+
+1 row created.
+
+SQL> insert into item values(&item_id,'&itemname',&price);
+Enter value for item_id: 2532
+Enter value for itemname: Corn soup
+Enter value for price: 34.65
+old   1: insert into item values(&item_id,'&itemname',&price)
+new   1: insert into item values(2532,'Corn soup',34.65)
+
+1 row created.
+
+SQL> insert into item values(&item_id,'&itemname',&price);
+Enter value for item_id: 2124
+Enter value for itemname: Lays
+Enter value for price: 20
+old   1: insert into item values(&item_id,'&itemname',&price)
+new   1: insert into item values(2124,'Lays',20)
+
+1 row created.
+
+SQL> insert into item values(&item_id,'&itemname',&price);
+Enter value for item_id: 1345
+Enter value for itemname: Dark Fantasy
+Enter value for price: 50
+old   1: insert into item values(&item_id,'&itemname',&price)
+new   1: insert into item values(1345,'Dark Fantasy',500)
+
+1 row created.
+
+SQL> insert into item values(&item_id,'&itemname',&price);
+Enter value for item_id: 9871
+Enter value for itemname: Boost
+Enter value for price: 500
+old   1: insert into item values(&item_id,'&itemname',&price)
+new   1: insert into item values(9871,'Boost',500)
+
+1 row created.
+
+SQL> select * from item;
+
+   ITEM_ID ITEMNAME                  PRICE
+---------- -------------------- ----------
+      2334 Geera                     200
+      2532 Corn soup                 300
+      2124 Lays                      20
+      1345 Dark Fantasy              50
+      9871 Boost                     500
+	  
+	  
+SQL> create or replace function itemprice(id number) return number is
+  2  p item.price % type;
+  3  begin
+  4  select price into p from item where item_id=id;
+  5  return(p);
+  6  end;
+  7  /
+
+Function created.
+
+SQL> create or replace function itemname(id number) return number is
+  2  q item.price % type;
+  3  begin
+  4  select price into q from item where item_id=id;
+  5  return(q);
+  6  end;
+  7  /
+
+
+SQL> declare
+  2  pr number;
+  3  id number;
+  4  name varchar(20);
+  5  begin
+  6  id:=&itemid;
+  7  pr:=itemprice(id);
+  8  name:=itemname(id);
+  9  dbms_output.put_line('item name is ' ||name);
+  10 dbms_output.put_line('item price is RS:'||pr);
+  11 end;
+  12 /
+Enter value for itemid: 9871
+old   6: id:=&itemid;
+new   6: id:=9871;
+item name is Boost
+item price is RS:500
+
+PL/SQL procedure successfully completed.
+	  
+	  
